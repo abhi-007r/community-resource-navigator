@@ -35,117 +35,154 @@ function App() {
       );
     } catch (error) {
       console.error(error);
-      alert("Failed to connect to backend");
+      alert("Failed to get recommendations");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div
-      style={{
-        maxWidth: "900px",
-        margin: "50px auto",
-        padding: "20px",
-        fontFamily: "Arial",
-      }}
-    >
-      <h1>Community Resource Navigator</h1>
+    <div className="min-h-screen bg-slate-100">
+      <div className="max-w-5xl mx-auto px-6 py-16">
+        <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
+          Community Resource Navigator
+        </h1>
 
-      <p>
-        Find local resources for housing,
-        food, employment, legal aid,
-        and mental health.
-      </p>
+        <p className="text-lg text-slate-600 mb-10">
+          Find local resources for housing,
+          food, employment, legal aid, and
+          mental health.
+        </p>
 
-      <textarea
-        placeholder="Describe your situation..."
-        rows={6}
-        value={situation}
-        onChange={(e) =>
-          setSituation(e.target.value)
-        }
-        style={{
-          width: "100%",
-          padding: "10px",
-        }}
-      />
+        <div className="bg-white rounded-2xl shadow-lg p-8">
+          <textarea
+            value={situation}
+            onChange={(e) =>
+              setSituation(e.target.value)
+            }
+            placeholder="Describe your situation..."
+            rows={4}
+            className="
+              w-full
+              border
+              border-slate-300
+              rounded-xl
+              p-4
+              text-slate-800
+              focus:outline-none
+              focus:ring-2
+              focus:ring-blue-500
+            "
+          />
 
-      <br />
-      <br />
-
-      <button
-        onClick={handleGetRecommendations}
-        disabled={loading}
-      >
-        {loading
-          ? "Loading..."
-          : "Get Recommendations"}
-      </button>
-
-      {categories.length > 0 && (
-        <div style={{ marginTop: "30px" }}>
-          <h2>Recommended Categories</h2>
-
-          <ul>
-            {categories.map((category) => (
-              <li key={category}>
-                {category}
-              </li>
-            ))}
-          </ul>
+          <button
+            onClick={handleGetRecommendations}
+            disabled={loading}
+            className="
+              mt-5
+              bg-blue-600
+              text-white
+              px-6
+              py-3
+              rounded-xl
+              font-medium
+              hover:bg-blue-700
+              transition
+              disabled:bg-gray-400
+            "
+          >
+            {loading
+              ? "Loading..."
+              : "Get Recommendations"}
+          </button>
         </div>
-      )}
 
-      {resources.length > 0 && (
-        <div style={{ marginTop: "30px" }}>
-          <h2>Matching Resources</h2>
+        {categories.length > 0 && (
+          <div className="mt-10">
+            <h2 className="text-2xl font-semibold mb-4">
+              Recommended Categories
+            </h2>
 
-          {resources.map((resource) => (
-            <div
-              key={resource.id}
-              style={{
-                border: "1px solid #ccc",
-                borderRadius: "8px",
-                padding: "15px",
-                marginBottom: "15px",
-              }}
-            >
-              <h3>{resource.name}</h3>
-
-              <p>
-                <strong>Category:</strong>{" "}
-                {resource.category}
-              </p>
-
-              <p>
-                {resource.description}
-              </p>
-
-              <p>
-                <strong>Location:</strong>{" "}
-                {resource.city}, {resource.state}
-              </p>
-
-              <p>
-                <strong>Phone:</strong>{" "}
-                {resource.phone}
-              </p>
-
-              <p>
-                <strong>Website:</strong>{" "}
-                <a
-                  href={resource.website}
-                  target="_blank"
-                  rel="noreferrer"
+            <div className="flex flex-wrap gap-3">
+              {categories.map((category) => (
+                <span
+                  key={category}
+                  className="
+                    bg-green-100
+                    text-green-800
+                    px-4
+                    py-2
+                    rounded-full
+                    font-medium
+                  "
                 >
-                  {resource.website}
-                </a>
-              </p>
+                  {category}
+                </span>
+              ))}
             </div>
-          ))}
-        </div>
-      )}
+          </div>
+        )}
+
+        {resources.length > 0 && (
+          <div className="mt-10">
+            <h2 className="text-2xl font-semibold mb-6">
+              Matching Resources
+            </h2>
+
+            <div className="grid gap-6">
+              {resources.map((resource) => (
+                <div
+                  key={resource.id}
+                  className="
+                    bg-white
+                    rounded-2xl
+                    shadow-lg
+                    p-6
+                    border
+                    border-slate-200
+                  "
+                >
+                  <h3 className="text-xl font-bold text-slate-900">
+                    {resource.name}
+                  </h3>
+
+                  <p className="text-blue-600 font-medium mt-1">
+                    {resource.category}
+                  </p>
+
+                  <p className="text-slate-600 mt-4">
+                    {resource.description}
+                  </p>
+
+                  <div className="mt-4 space-y-2 text-slate-700">
+                    <p>
+                      📍 {resource.city},{" "}
+                      {resource.state}
+                    </p>
+
+                    <p>
+                      📞 {resource.phone}
+                    </p>
+
+                    <a
+                      href={resource.website}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="
+                        inline-block
+                        text-blue-600
+                        hover:underline
+                      "
+                    >
+                      🔗 Visit Website
+                    </a>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
