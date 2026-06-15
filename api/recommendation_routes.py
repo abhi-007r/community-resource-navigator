@@ -1,12 +1,19 @@
 from fastapi import APIRouter
 from fastapi import Depends
+
 from sqlalchemy.orm import Session
 
 from database.dependencies import get_db
+
 from models.resource import Resource
+
 from schemas.recommendation_schema import (
     RecommendationRequest,
     RecommendationResponse
+)
+
+from services.recommendation_service import (
+    extract_categories
 )
 
 router = APIRouter(
@@ -24,53 +31,9 @@ def recommend_resources(
     db: Session = Depends(get_db)
 ):
 
-    text = request.situation.lower()
-
-    categories = []
-
-    if any(
-        word in text
-        for word in [
-            "food",
-            "hungry",
-            "groceries"
-        ]
-    ):
-        categories.append("Food")
-
-    if any(
-        word in text
-        for word in [
-            "job",
-            "employment",
-            "work"
-        ]
-    ):
-        categories.append(
-            "Workforce Development"
-        )
-
-    if any(
-        word in text
-        for word in [
-            "housing",
-            "homeless",
-            "rent"
-        ]
-    ):
-        categories.append("Housing")
-
-    if any(
-        word in text
-        for word in [
-            "mental",
-            "depression",
-            "anxiety"
-        ]
-    ):
-        categories.append(
-            "Mental Health"
-        )
+    categories = extract_categories(
+        request.situation
+    )
 
     resources = (
         db.query(Resource)
